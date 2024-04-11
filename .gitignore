@@ -1,0 +1,24 @@
+
+frontEnd/node_modules
+frontEnd/dist
+frontEnd/dist-ssr
+frontEnd/*.local
+
+# Editor directories and files
+frontEnd/.vscode/*
+frontEnd/!.vscode/extensions.json
+frontEnd/.idea
+frontEnd/.DS_Store
+frontEnd/*.suo
+frontEnd/*.ntvs*
+frontEnd/*.njsproj
+frontEnd/*.sln
+frontEnd/*.sw?
+
+backend/node_modules
+backend/dist
+backend/dist-ssr
+backend/*.local
+
+
+*/.env
