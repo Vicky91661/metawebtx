@@ -1,7 +1,41 @@
 import React from 'react';
 import Header from '../components/Header';
+import { useState } from 'react';
+import axios from 'axios';
 
 function Chatbot() {
+  const [error,setError]= useState(false)
+  const [message,setMessage]=useState(null)
+  const [loading,setLoading]=useState(false)
+
+  const [formData,setFormData]=useState({
+    firstName:"",
+    lastName:"",
+    email:"",
+    phone:"",
+    sub:"",
+    message:""
+  })
+
+  const handleChange= (e)=>{
+    setError(null)
+    setMessage(null)
+    const {name,value}=e.target;
+    setFormData((prev)=>({...prev,[name]:value}))
+  }
+
+  const handleMessage=async()=>{
+    setLoading(true)
+    try {
+      const response = await axios.post("http://localhost:3002/chatbot",formData)
+      setMessage("Thank you for contacting us, we will get back to you")
+    } catch (error) {
+        setError(error.response.data.message)
+    }finally{
+        setLoading(false)
+    }
+  }
+
   return (
     <div>
       <Header/>
@@ -18,38 +52,41 @@ function Chatbot() {
               <form onSubmit={(e)=>e.preventDefault()}>
                 <div className="mb-4">
                   <label htmlFor="firstName" className="block mb-2 text-sm font-medium text-gray-900">First name</label>
-                  <input type="text" id="firstName" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Enter your first name" required />
+                  <input onChange={handleChange} name='firstName' type="text" id="firstName" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Enter your first name" required />
                 </div>
                 <div className="mb-4">
                   <label htmlFor="lastName" className="block mb-2 text-sm font-medium text-gray-900">Last name</label>
-                  <input type="text" id="lastName" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Enter your last name" required />
+                  <input  onChange={handleChange} name='lastName' type="text" id="lastName" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Enter your last name" required />
                 </div>
                 <div className="mb-4">
                   <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900">Email</label>
-                  <input type="email" id="email" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Enter your email" required />
-                </div>
-                <div className="mb-4">
-                  <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900">Email</label>
-                  <input type="email" id="email" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Enter your email" required />
+                  <input  onChange={handleChange} name="email" type="email" id="email" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Enter your email" required />
                 </div>
                 <div className="mb-4">
                   <label htmlFor="PhoneNumber" className="block mb-2 text-sm font-medium text-gray-900">Phone Number</label>
-                  <input type="PhoneNumber" id="email" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Enter your email" required />
+                  <input  onChange={handleChange} name='phone' type="PhoneNumber" id="PhoneNumber" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="(+21) 1234567890" required />
                 </div>
                 <div className="mb-4">
-                  <label htmlFor="message" className="block mb-2 text-sm font-medium text-gray-900">Message</label>
-                  <textarea id="message" rows="4" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Enter your message" required></textarea>
+                  <label htmlFor="Subject" className="block mb-2 text-sm font-medium text-gray-900">Subject</label>
+                  <input  onChange={handleChange} name='sub' type="Subject" id="Subject" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="e.g., Inquery about English Courses" required />
                 </div>
-                <button type="submit" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Send message</button>
+                
+                <div className="mb-4">
+                  <label htmlFor="message" className="block mb-2 text-sm font-medium text-gray-900">Message</label>
+                  <textarea  onChange={handleChange} name='message' id="message" rows="4" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Enter your message" required></textarea>
+                </div>
+                <button onClick={handleMessage} type="submit" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+                  {!loading?"Send message":"Sending...."}</button>
               </form>
+              {error && <div className='text-red-700 text-2xl mt-5'>{error}</div>}
             </div>
           </div>
         </div>
       </div>
-    </div>
-    </div>
-   
+      </div>
+    </div> 
   );
+
 }
 
 export default Chatbot;
