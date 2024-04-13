@@ -17,7 +17,7 @@ function Auth({isSignin}) {
         setLoading(true)
         if(isSignin){
             try {
-                const response = await axios.post("http://localhost:3002/signin",formData)
+                const response = await axios.post("http://localhost:3002/user/signin",formData)
                 const data = response.data
                 const user = JSON.stringify(data)
                 localStorage.setItem("user",user)
@@ -33,7 +33,7 @@ function Auth({isSignin}) {
             
         }else{
             try {
-                const response = await axios.post("http://localhost:3002/signup",formData)
+                const response = await axios.post("http://localhost:3002/user/signup",formData)
                 const data = response.data
                 const user = JSON.stringify(data)
                 localStorage.setItem("user",user)

@@ -29,7 +29,7 @@ function Chatbot() {
     setMessage(null)
     setLoading(true)
     try {
-      const response = await axios.post("http://localhost:3002/chatbot",formData)
+      await axios.post("http://localhost:3002/chatbot/message",formData)
       setMessage("Thank you for contacting us, we will get back to you")
     } catch (error) {
         setError(error.response.data.message)

@@ -23,7 +23,7 @@ function Dashboard() {
     const navigate = useNavigate()
 
     const fetchMessage = async()=>{
-        const response = await axios.get("http://localhost:3002/chatbot")
+        const response = await axios.get("http://localhost:3002/chatbot/messages")
         console.log(response.data.message)
         setMessages(response.data.message)
     }
