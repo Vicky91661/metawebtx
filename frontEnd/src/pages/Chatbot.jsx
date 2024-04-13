@@ -25,6 +25,8 @@ function Chatbot() {
   }
 
   const handleMessage=async()=>{
+    setError(null)
+    setMessage(null)
     setLoading(true)
     try {
       const response = await axios.post("http://localhost:3002/chatbot",formData)
@@ -79,6 +81,7 @@ function Chatbot() {
                   {!loading?"Send message":"Sending...."}</button>
               </form>
               {error && <div className='text-red-700 text-2xl mt-5'>{error}</div>}
+              {message && <div className='text-green-700 text-xl mt-5'>{message}</div>}
             </div>
           </div>
         </div>

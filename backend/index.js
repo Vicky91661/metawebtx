@@ -17,10 +17,9 @@ app.post("/signin", (req,res)=>{
             if(err) {
             console.log(err)
             return res.status(400).json({
-                message:"Error while fetching database"
+                message:err.sqlMessage
              })
             }
-            console.log(result)
             if(result.length>0){
                 const DataBasePassword = result[0].pass;
                 if(password===DataBasePassword){
@@ -58,7 +57,7 @@ app.post("/signup", (req,res)=>{
         db.query("SELECT * FROM users WHERE email = ?",[email], (err,result)=>{
             if(err) {
                 return res.status(400).json({
-                    message:"Error while fetching database"
+                    message:err.sqlMessage
                 })
             }
             if(result.length>0){
@@ -69,9 +68,8 @@ app.post("/signup", (req,res)=>{
     
                 db.query("INSERT INTO users (email, pass,role) VALUES (?,?,'user')",[email,password], (err,result)=>{
                     if(err) {
-                        console.log("error while fetching data",err)
                         return res.status(400).json({
-                            message:"Error while fetching database"
+                            message:err.sqlMessage
                         })
                     } 
                     return res.status(200).json({
@@ -93,29 +91,38 @@ app.post("/signup", (req,res)=>{
 
 // Route to get one post
 app.post("/chatbot", (req,res)=>{
-
-const id = req.params.id;
- db.query("SELECT * FROM posts WHERE id = ?", id, 
- (err,result)=>{
-    if(err) {
-    console.log(err)
-    } 
-    res.send(result)
-    });   });
+    const {firstName,lastName,email,phone,sub,message}=req.body;
+    db.query("INSERT INTO chatbot (firstName,lastName,email,phone,sub,message) VALUES (?,?,?,?,?,?)",
+    [firstName,lastName,email,phone,sub,message], (err,result)=>{
+            if(err) {
+                console.log("error while fetching data",err.sqlMessage)
+                return res.status(400).json({
+                    message:err.sqlMessage
+                })
+            } 
+            console.log(result)
+            return res.status(200).json({
+                message:"sucessfull"
+            })
+        });
+});
 
 // Route for creating the post
 app.get('/chatbot', (req,res)=> {
 
-const username = req.body.userName;
-const title = req.body.title;
-const text = req.body.text;
-
-db.query("INSERT INTO posts (title, post_text, user_name) VALUES (?,?,?)",[title,text,username], (err,result)=>{
-   if(err) {
-   console.log(err)
-   } 
-   console.log(result)
-});   })
+    db.query("SELECT * FROM chatbot", (err,result)=>{
+        if(err) {
+            console.log(err)
+            return res.status(400).json({
+                message:err.sqlMessage
+            })
+        } 
+        console.log(result)
+        res.status(200).json({
+            message:result
+        })
+    });   
+})
 
 // Route to like a post
 
